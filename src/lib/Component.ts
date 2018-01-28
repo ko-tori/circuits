@@ -13,7 +13,7 @@ interface Link {
 }
 
 export class Component {
-	private components: Set<GUID>;
+	private components: Set<GUID> = new Set<GUID>();
 	private location: Vector<number>;
 	private links: Set<Link>;
 	private absoluteInputs: Set<IO>;
@@ -28,7 +28,7 @@ export class Component {
 
 	/// creates a new component from a smaller component
 	static from(inner: Component): Component {
-		let outer = new Component();
+		let outer = new Component(inner.location);
 		outer.components.add(inner.guid);
 		for(let io of inner.absoluteOutputs) {
 			outer.absoluteOutputs.add(io);
@@ -39,9 +39,9 @@ export class Component {
 		return outer;
 	}
 
-	constructor(private inputs: Link[] = [], private outputs: Component[] = []) {
+	constructor(location: Vector<number>) {
 		this.guid = GUID.new();
-
+		this.location = location;
 	}
 
 	compose(): void {

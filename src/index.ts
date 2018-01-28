@@ -1,5 +1,6 @@
 import { Library } from "./lib/Library";
-import { Component } from "./lib/Component";
+import { Component, ANDComponent, componentMap } from "./lib/Component";
+import { Vector } from "./Common";
 
 import * as Canvas from "./ui/Canvas";
 
@@ -19,4 +20,9 @@ export function main() {
     Canvas.Draw();
 
     window.addEventListener("resize", resizeHandler);
+
+    // let a = new ANDComponent(new Vector<number>(0, 0));
+    // let b = Component.from(a);
+    // let c = new ANDComponent(new Vector<number>(0, 0));
+    // b.attach({from: {guid: c.guid, number: 0}, to: {guid: b.guid, number: 0}});
 }
