@@ -1,2 +1,2 @@
-import { Library } from "./Library";
-import { Component } from "./Component";
+import { Library } from "./lib/Library";
+import { Component } from "./lib/Component";

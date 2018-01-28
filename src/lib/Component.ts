@@ -1,6 +1,10 @@
-import { BitArray, GUID, Vector } from "./Common";
+import { BitArray, GUID, Vector } from "../Common";
 
-type Link = Vector<Component>;
+// 1. output index of parent
+// 2. parent guid
+// 3. input index of child
+// 4. child guid
+type Link = [Number, GUID, Number, GUID];
 
 export class Component {
 	private componentMap: Map<GUID, Component>;
