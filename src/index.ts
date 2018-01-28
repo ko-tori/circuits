@@ -1,12 +1,22 @@
 import { Library } from "./lib/Library";
 import { Component } from "./lib/Component";
 
-import { canvas } from "./Common";
-import * as Listener from "./ui/Listener";
+import * as Canvas from "./ui/Canvas";
+
+const resizeHandler = function (evt) {
+    let target = <Window>evt.target;
+    Canvas.canvas.width = target.innerWidth;
+    Canvas.canvas.height = target.innerHeight;
+    Canvas.Draw();
+}
 
 export function main() {
-    let componentTree = new Set<Component>();
+    Canvas.canvas.width = window.innerWidth;
+    Canvas.canvas.height = window.innerHeight;
 
-    canvas.focus();
-    canvas.addEventListener("mousemove", Listener.MouseMove);
+    Canvas.canvas.focus();
+    Canvas.canvas.addEventListener("mousemove", Canvas.MouseMove);
+    Canvas.Draw();
+
+    window.addEventListener("resize", resizeHandler);
 }
