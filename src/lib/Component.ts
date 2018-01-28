@@ -1,6 +1,4 @@
-import { GUID, Vector } from "../Common";
-
-export let componentMap: Map<GUID, Component>;
+import { componentMap, GUID, Vector } from "../Common";
 
 interface IO {
 	guid: GUID,
@@ -30,10 +28,10 @@ export class Component {
 	static from(inner: Component): Component {
 		let outer = new Component(inner.location);
 		outer.components.add(inner.guid);
-		for(let io of inner.absoluteOutputs) {
+		for (let io of inner.absoluteOutputs) {
 			outer.absoluteOutputs.add(io);
 		}
-		for(let io of inner.absoluteInputs) {
+		for (let io of inner.absoluteInputs) {
 			outer.absoluteInputs.add(io);
 		}
 		return outer;
@@ -53,7 +51,9 @@ export class Component {
 			this.components.add(link.to.guid);
 			this.links.add(link);
 			this.absoluteOutputs.delete(link.from);
-			for(let io of componentMap.get(link.to.guid).absoluteOutputs) {
+			let toComponent = componentMap.get(link.to.guid);
+			if (toComponent == undefined) return false;
+			for (let io of toComponent.absoluteOutputs) {
 				this.absoluteOutputs.add(io);
 			}
 			return true;
@@ -62,7 +62,9 @@ export class Component {
 			this.components.add(link.from.guid);
 			this.links.add(link);
 			this.absoluteInputs.delete(link.to);
-			for(let io of componentMap.get(link.from.guid).absoluteInputs) {
+			let fromComponent = componentMap.get(link.to.guid);
+			if (fromComponent == undefined) return false;
+			for (let io of fromComponent.absoluteInputs) {
 				this.absoluteInputs.add(io);
 			}
 			return true;

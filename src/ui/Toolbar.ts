@@ -1,21 +1,30 @@
-import { Point } from "../Common";
+import { Point, Newable } from "../Common";
 import { toolbarHeight, toolbarPadding } from "../Constants";
+import { Component, ANDComponent } from "../lib/Component";
 
 interface DragInfo {
-    index: number,
+    ctor: Function,
     position: Point
 }
 
+const size = toolbarHeight - 2 * toolbarPadding;
+
 export class Toolbar {
     private dragInfo: DragInfo | null = null;
-    private phantom: Point = null;
+    private phantom: Point | null = null;
     private elements = [
-        "and"
+        { name: "and", ctor: ANDComponent, topleft: new Point(0, 0) }
     ];
+    constructor() {
+        let x = toolbarPadding, y = toolbarPadding;
+        for (let i = 0; i < this.elements.length; ++i) {
+            this.elements[i].topleft = new Point(x, y);
+            x += size + toolbarPadding;
+        }
+    }
     public draw(ctx: CanvasRenderingContext2D, width: number) {
         let x = toolbarPadding, y = toolbarPadding;
-        let size = toolbarHeight - 2 * toolbarPadding;
-        for (let element of this.elements) {
+        for (let i = 0; i < this.elements.length; ++i) {
             ctx.strokeStyle = "black";
             ctx.strokeRect(x, y, size, size);
             x += size + toolbarPadding;
@@ -32,11 +41,24 @@ export class Toolbar {
     }
     public mousedown(evt: MouseEvent) {
         let x = evt.clientX, y = evt.clientY;
-        this.dragInfo = <DragInfo>{ index: 0, position: new Point(x, y) };
+        for (let i = 0; i < this.elements.length; ++i) {
+            let p = this.elements[i].topleft;
+            if (x >= p.x && x <= p.x + size && y >= p.y && y <= p.y + size) {
+                let ctor = this.elements[i].ctor;
+                this.dragInfo = <DragInfo>{ ctor: ctor, position: new Point(x, y) };
+                break;
+            }
+        }
     }
     public mouseup(evt: MouseEvent) {
-        this.dragInfo = null;
-        this.phantom = null;
+        // is the mouseup in the stage area?
+        if (this.dragInfo != null) {
+            let ctor = <Newable<Component>>this.dragInfo.ctor;
+            let c = new ctor();
+            console.log("create a component!", c);
+            this.dragInfo = null;
+            this.phantom = null;
+        }
     }
     public mousemove(evt: MouseEvent) {
         if (this.dragInfo != null) {

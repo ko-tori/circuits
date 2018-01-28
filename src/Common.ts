@@ -1,6 +1,11 @@
 import { Component } from "./lib/Component";
 
 export let topLevelComponents = new Set<GUID>();
+export let componentMap: Map<GUID, Component>;
+
+export interface Newable<T> {
+    new(...args: any[]): T;
+}
 
 /// globally unique identifier
 export class GUID extends String {

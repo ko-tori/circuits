@@ -9,6 +9,7 @@ export class Canvas {
     }
     public draw() {
         let ctx = this.c.getContext("2d");
+        if (ctx == null) return;
         ctx.clearRect(0, 0, this.c.width, this.c.height);
 
         // 1. draw the toolbar
