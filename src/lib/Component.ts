@@ -12,18 +12,10 @@ interface Link {
 
 export class Component {
 	private components: Set<GUID> = new Set<GUID>();
-<<<<<<< HEAD
-	private location: Vector<number>;
 	private links: Set<Link> = new Set<Link>;
 	private absoluteInputs: Array<IO> = new Array<IO>();
 	private absoluteOutputs: Array<IO> = new Array<IO>();
-	private values: boolean[];
-=======
 	public location: Point;
-	private links: Set<Link>;
-	private absoluteInputs: Set<IO>;
-	private absoluteOutputs: Set<IO>;
->>>>>>> f3c54df82671448fb158af9953f13a1d27c0dfe1
 
 	public evaluate: ((inputs: boolean[]) => boolean[]);
 
