@@ -1,15 +1,9 @@
 export class Component {
-	inputs: Link[];
-	constructor(inputs: Link[], outputs: Component[]) {
-
+	constructor(private inputs: Link[], private outputs: Component[]) {
 	}
 }
 
 export class Link {
-	component: Component;
-	index: number;
-	constructor(component: Component, index: number) {
-		this.component = component;
-		this.index = index;
+	constructor(private component: Component, private index: number) {
 	}
 }
