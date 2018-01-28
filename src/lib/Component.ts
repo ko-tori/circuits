@@ -41,14 +41,11 @@ export class Component {
 
 	constructor(location: Vector<number>) {
 		this.guid = GUID.new();
-<<<<<<< HEAD
-=======
 		this.location = location;
 	}
 
 	compose(): void {
 
->>>>>>> 6a8ead43ad156264e88b4131eacef9267355c5ca
 	}
 
 	attach(link: Link): boolean {

@@ -1,8 +1,6 @@
 import { topLevelComponents } from "../Common";
 import { Toolbar } from "./Toolbar";
-
-export const toolbarHeight = 75;
-export const libraryWidth = 280;
+import { toolbarHeight, libraryWidth } from "../Constants";
 
 export class Canvas {
     private toolbar;
@@ -11,6 +9,7 @@ export class Canvas {
     }
     public draw() {
         let ctx = this.c.getContext("2d");
+        ctx.clearRect(0, 0, this.c.width, this.c.height);
 
         // 1. draw the toolbar
         ctx.save();
@@ -36,11 +35,14 @@ export class Canvas {
     }
     public mousedown(evt: MouseEvent) {
         this.toolbar.mousedown(evt);
+        this.draw();
     }
     public mouseup(evt: MouseEvent) {
         this.toolbar.mouseup(evt);
+        this.draw();
     }
     public mousemove(evt: MouseEvent) {
         this.toolbar.mousemove(evt);
+        this.draw();
     }
 }
