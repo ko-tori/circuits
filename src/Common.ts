@@ -1,3 +1,9 @@
+/// expanding bit array that extends the functionality of uint array
+export class BitArray {
+    // TODO: automatically expanding
+    private array: Uint8Array = new Uint8Array(40);
+}
+
 /// globally unique identifier
 export class GUID extends String {
     static all: Set<String> = new Set<String>();
@@ -11,5 +17,11 @@ export class GUID extends String {
         }
         GUID.all.add(string);
         return string;
+    }
+}
+
+/// generic pair class
+export class Vector<T> {
+    constructor(public x: T, public y: T) {
     }
 }
