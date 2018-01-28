@@ -1,3 +1,5 @@
-export class Library {
+import { Component } from "./Component";
 
+export class Library {
+    private templates: Component[];
 }
