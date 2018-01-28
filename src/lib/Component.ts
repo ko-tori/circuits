@@ -11,14 +11,15 @@ interface Link {
 }
 
 export class Component {
-	private components = new Set<GUID>();
-	private links = new Set<Link>();
+	public components = new Set<GUID>();
+	public links = new Set<Link>();
 
 	public location: Point;
-	public absoluteInputs = new Set<IO>();
-	public absoluteOutputs = new Set<IO>();
+	public absoluteInputs = new Array<IO>();
+	public absoluteOutputs = new Array<IO>();
 
 	public evaluate: ((inputs: boolean[]) => boolean[]);
+	public resolve(a: boolean[]): void { }
 
 	// id
 	public guid: GUID;
@@ -30,16 +31,17 @@ export class Component {
 		let outer = new Component(inner.location);
 		outer.components.add(inner.guid);
 		for (let io of inner.absoluteOutputs) {
-			outer.absoluteOutputs.add(io);
+			outer.absoluteOutputs.push(io);
 		}
 		for (let io of inner.absoluteInputs) {
-			outer.absoluteInputs.add(io);
+			outer.absoluteInputs.push(io);
 		}
 		return outer;
 	}
 
 	constructor(location: Point) {
 		this.guid = GUID.new();
+		componentMap.set(this.guid, this);
 		this.location = location;
 		componentMap.set(this.guid, this);
 	}
@@ -51,23 +53,23 @@ export class Component {
 	attach(link: Link): boolean {
 		if (this.components.has(link.from.guid)) {
 			this.components.add(link.to.guid);
-			this.links.add(link);
-			this.absoluteOutputs.delete(link.from);
 			let toComponent = componentMap.get(link.to.guid);
 			if (toComponent == undefined) return false;
+			toComponent.links.add(link);
+			this.absoluteOutputs.splice(this.absoluteOutputs.indexOf(link.from), 1);
 			for (let io of toComponent.absoluteOutputs) {
-				this.absoluteOutputs.add(io);
+				this.absoluteOutputs.push(io);
 			}
 			return true;
 		}
 		if (this.components.has(link.to.guid)) {
 			this.components.add(link.from.guid);
-			this.links.add(link);
-			this.absoluteInputs.delete(link.to);
 			let fromComponent = componentMap.get(link.to.guid);
 			if (fromComponent == undefined) return false;
+			fromComponent.links.add(link);
+			this.absoluteInputs.splice(this.absoluteInputs.indexOf(link.to), 1);
 			for (let io of fromComponent.absoluteInputs) {
-				this.absoluteInputs.add(io);
+				this.absoluteInputs.push(io);
 			}
 			return true;
 		}
@@ -76,13 +78,25 @@ export class Component {
 }
 
 export class ANDComponent extends Component {
-	public absoluteInputs = new Set<IO>();
-	public absoluteOutputs = new Set<IO>();
+	public resolve(a: boolean[]): void {
+		let values = this.evaluate(a);
+		for (let link of this.links) {
+			let toComponent = componentMap.get(link.to.guid);
+			if (toComponent == undefined) continue;
+			// toComponent.resolve(values[link.from.index]);
+		}
+	}
 	constructor(location: Point) {
 		super(location);
-		this.absoluteInputs.add(<IO>{ guid: this.guid, index: 0 });
+		this.absoluteInputs.push(<IO>{ guid: this.guid, index: 0 });
+		this.absoluteInputs.push(<IO>{ guid: this.guid, index: 1 });
+		this.absoluteOutputs.push(<IO>{ guid: this.guid, index: 0 });
 	}
-	public evaluate = (p: boolean[]): boolean[] => {
-		return [p[0] && p[1]];
+	public evaluate = (inputs: boolean[]): boolean[] => {
+		return [inputs[0] && inputs[1]];
 	};
+}
+
+export class Source extends Component {
+
 }
