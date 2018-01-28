@@ -1,20 +1,24 @@
 import { BitArray, GUID, Vector } from "../Common";
 
+export let componentMap: Map<GUID, Component>;
+
 // 1. output index of parent
 // 2. parent guid
 // 3. input index of child
 // 4. child guid
-type Link = [Number, GUID, Number, GUID];
+type Link = [IO, IO];
+type IO = [GUID, Number];
 
 export class Component {
-	private componentMap: Map<GUID, Component>;
+	private components: Set<GUID>;
 	private locationMap: Map<GUID, Vector<Number>>;
 	private links: Set<Link>;
+	private absoluteInput: 
 
 	private evaluate: ((inputs: BitArray) => BitArray);
 
 	// id
-	private guid: GUID;
+	public guid: GUID;
 	/// whether the component should show a name or internal components
 	private named: boolean;
 
@@ -26,9 +30,24 @@ export class Component {
 	}
 	constructor(private inputs: Link[] = [], private outputs: Component[] = []) {
 		this.guid = GUID.new();
+
 	}
 
-	/// link two components
-	static link(a: Component, b: Component) {
+	attach(link: Link): boolean {
+		if (this.components.has(link[0][0])) {
+			this.components.add(link[1][0]);
+			this.links.add(link);
+			return true;
+		}
+		if (this.components.has(link[1][0])) {
+			this.components.add(link[0][0]);
+			this.links.add(link);
+			return true;
+		}
+		return false;
 	}
+}
+
+export class ANDComponent {
+
 }
