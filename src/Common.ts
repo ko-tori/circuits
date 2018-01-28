@@ -1,7 +1,18 @@
+import { Component } from "./lib/Component";
+
+export let topLevelComponents = new Set<GUID>();
+
 /// expanding bit array that extends the functionality of uint array
 export class BitArray {
     // TODO: automatically expanding
     private array: Uint8Array = new Uint8Array(40);
+    public get(index: number) {
+        // TODO: actually get the bit
+        return this.array[index];
+    }
+    public set(index: number, value: boolean) {
+        this.array[index] = value ? 1 : 0;
+    }
 }
 
 /// globally unique identifier

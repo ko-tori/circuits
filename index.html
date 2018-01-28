@@ -3,13 +3,31 @@
 
 <head>
     <title>Circuit Builder</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 
 <body>
+    <canvas id="canvas"></canvas>
     <script src="./node_modules/systemjs/dist/system.js"></script>
     <script src="./js/bundle.js"></script>
     <script>
-        System.import("index");
+        System.import("index").then(function (ctx) {
+            ctx.main();
+        });
     </script>
 </body>
 
