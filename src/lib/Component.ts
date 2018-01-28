@@ -15,11 +15,16 @@ interface Link {
 export class Component {
 	private components: Set<GUID> = new Set<GUID>();
 	private location: Vector<number>;
-	private links: Set<Link>;
-	private absoluteInputs: Set<IO>;
-	private absoluteOutputs: Set<IO>;
+	private links: Set<Link> = new Set<Link>;
+	private absoluteInputs: Array<IO> = new Array<IO>();
+	private absoluteOutputs: Array<IO> = new Array<IO>();
+	private values: boolean[];
 
 	public evaluate: ((inputs: boolean[]) => boolean[]);
+
+	public resolve(a: boolean[]): boolean[] {
+		return a;
+	}
 
 	// id
 	public guid: GUID;
@@ -41,6 +46,7 @@ export class Component {
 
 	constructor(location: Vector<number>) {
 		this.guid = GUID.new();
+		componentMap.set(this.guid, this);
 		this.location = location;
 	}
 
@@ -51,8 +57,8 @@ export class Component {
 	attach(link: Link): boolean {
 		if (this.components.has(link.from.guid)) {
 			this.components.add(link.to.guid);
-			this.links.add(link);
-			this.absoluteOutputs.delete(link.from);
+			componentMap.get(link.to.guid).links.add(link);
+			this.absoluteOutputs.splice(this.absoluteOutputs.indexOf(link.from), 1);
 			for(let io of componentMap.get(link.to.guid).absoluteOutputs) {
 				this.absoluteOutputs.add(io);
 			}
@@ -60,8 +66,8 @@ export class Component {
 		}
 		if (this.components.has(link.to.guid)) {
 			this.components.add(link.from.guid);
-			this.links.add(link);
-			this.absoluteInputs.delete(link.to);
+			componentMap.get(link.from.guid).links.add(link);
+			this.absoluteInputs.splice(this.absoluteInputs.indexOf(link.to), 1);
 			for(let io of componentMap.get(link.from.guid).absoluteInputs) {
 				this.absoluteInputs.add(io);
 			}
@@ -72,7 +78,29 @@ export class Component {
 }
 
 export class ANDComponent extends Component {
+	private absoluteInputs: Set<IO> = new Set<IO>();
+	private absoluteOutputs: Set<IO> = new Set<IO>();
+
+	public resolve(a: boolean[]): void {
+		let values = this.evaluate(a);
+		for(let link of this.links) {
+			componentMap.get(link.to.guid).resolve(values[link.from.number]);
+		}
+	}
+
+	constructor(location: Vector<number>) {
+		super(location);
+		this.absoluteInputs.add(<IO>{guid: this.guid, number: 0});
+		this.absoluteInputs.add(<IO>{guid: this.guid, number: 1});
+		this.absoluteOutputs.add(<IO>{guid: this.guid, number: 0});
+		this.values = [false];
+	}
+
 	public evaluate = (p: boolean[]): boolean[] => {
 		return [p[0] && p[1]];
 	};
+}
+
+export class Source extends Component {
+
 }
