@@ -2,18 +2,20 @@ import { BitArray, GUID, Vector } from "../Common";
 
 export let componentMap: Map<GUID, Component>;
 
-// 1. output index of parent
-// 2. parent guid
-// 3. input index of child
-// 4. child guid
-type Link = [IO, IO];
-type IO = [GUID, Number];
+interface IO {
+	guid: GUID,
+	number: number
+}
+
+interface Link {
+	from: IO;
+	to: IO;
+}
 
 export class Component {
 	private components: Set<GUID>;
-	private locationMap: Map<GUID, Vector<Number>>;
+	private locationMap: Map<GUID, Vector<number>>;
 	private links: Set<Link>;
-	private absoluteInput: 
 
 	private evaluate: ((inputs: BitArray) => BitArray);
 
@@ -25,7 +27,7 @@ export class Component {
 	/// creates a new component from a smaller component
 	static from(inner: Component): Component {
 		let outer = new Component();
-		outer.componentMap.set(inner.guid, inner);
+		outer.components.add(inner.guid);
 		return outer;
 	}
 	constructor(private inputs: Link[] = [], private outputs: Component[] = []) {
@@ -34,13 +36,13 @@ export class Component {
 	}
 
 	attach(link: Link): boolean {
-		if (this.components.has(link[0][0])) {
-			this.components.add(link[1][0]);
+		if (this.components.has(link.from.guid)) {
+			this.components.add(link.to.guid);
 			this.links.add(link);
 			return true;
 		}
-		if (this.components.has(link[1][0])) {
-			this.components.add(link[0][0]);
+		if (this.components.has(link.from.guid)) {
+			this.components.add(link.to.guid);
 			this.links.add(link);
 			return true;
 		}
