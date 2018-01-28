@@ -1,4 +1,4 @@
-import { topLevelComponents } from "../Common";
+import { topLevelComponents, componentMap } from "../Common";
 import { Toolbar } from "./Toolbar";
 import { toolbarHeight, libraryWidth } from "../Constants";
 
@@ -9,6 +9,7 @@ export class Canvas {
     }
     public draw() {
         let ctx = this.c.getContext("2d");
+        if (ctx == null) return;
         ctx.clearRect(0, 0, this.c.width, this.c.height);
 
         // 1. draw the toolbar
@@ -27,11 +28,17 @@ export class Canvas {
         ctx.restore();
 
         // 3. draw components
-        ctx.save();
         for (let guid of topLevelComponents) {
-            console.log(guid);
+            let component = componentMap.get(guid);
+            if (component == undefined) continue;
+            ctx.save();
+            ctx.translate(component.location.x, component.location.y);
+            ctx.strokeStyle = "black";
+            ctx.beginPath();
+            ctx.arc(0, 0, 40, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.restore();
         }
-        ctx.restore();
     }
     public mousedown(evt: MouseEvent) {
         this.toolbar.mousedown(evt);

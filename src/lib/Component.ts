@@ -1,6 +1,4 @@
-import { GUID, Vector } from "../Common";
-
-export let componentMap: Map<GUID, Component>;
+import { componentMap, GUID, Point } from "../Common";
 
 interface IO {
 	guid: GUID,
@@ -14,11 +12,18 @@ interface Link {
 
 export class Component {
 	private components: Set<GUID> = new Set<GUID>();
+<<<<<<< HEAD
 	private location: Vector<number>;
 	private links: Set<Link> = new Set<Link>;
 	private absoluteInputs: Array<IO> = new Array<IO>();
 	private absoluteOutputs: Array<IO> = new Array<IO>();
 	private values: boolean[];
+=======
+	public location: Point;
+	private links: Set<Link>;
+	private absoluteInputs: Set<IO>;
+	private absoluteOutputs: Set<IO>;
+>>>>>>> f3c54df82671448fb158af9953f13a1d27c0dfe1
 
 	public evaluate: ((inputs: boolean[]) => boolean[]);
 
@@ -35,19 +40,20 @@ export class Component {
 	static from(inner: Component): Component {
 		let outer = new Component(inner.location);
 		outer.components.add(inner.guid);
-		for(let io of inner.absoluteOutputs) {
+		for (let io of inner.absoluteOutputs) {
 			outer.absoluteOutputs.add(io);
 		}
-		for(let io of inner.absoluteInputs) {
+		for (let io of inner.absoluteInputs) {
 			outer.absoluteInputs.add(io);
 		}
 		return outer;
 	}
 
-	constructor(location: Vector<number>) {
+	constructor(location: Point) {
 		this.guid = GUID.new();
 		componentMap.set(this.guid, this);
 		this.location = location;
+		componentMap.set(this.guid, this);
 	}
 
 	compose(): void {
@@ -59,7 +65,9 @@ export class Component {
 			this.components.add(link.to.guid);
 			componentMap.get(link.to.guid).links.add(link);
 			this.absoluteOutputs.splice(this.absoluteOutputs.indexOf(link.from), 1);
-			for(let io of componentMap.get(link.to.guid).absoluteOutputs) {
+			let toComponent = componentMap.get(link.to.guid);
+			if (toComponent == undefined) return false;
+			for (let io of toComponent.absoluteOutputs) {
 				this.absoluteOutputs.add(io);
 			}
 			return true;
@@ -68,7 +76,9 @@ export class Component {
 			this.components.add(link.from.guid);
 			componentMap.get(link.from.guid).links.add(link);
 			this.absoluteInputs.splice(this.absoluteInputs.indexOf(link.to), 1);
-			for(let io of componentMap.get(link.from.guid).absoluteInputs) {
+			let fromComponent = componentMap.get(link.to.guid);
+			if (fromComponent == undefined) return false;
+			for (let io of fromComponent.absoluteInputs) {
 				this.absoluteInputs.add(io);
 			}
 			return true;

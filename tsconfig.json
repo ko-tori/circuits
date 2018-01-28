@@ -4,6 +4,7 @@
         "target": "es6",
         "removeComments": true,
         "sourceMap": true,
+        "strictNullChecks": true,
         "outFile": "js/bundle.js"
     },
     "files": [

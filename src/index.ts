@@ -1,6 +1,6 @@
 import { Library } from "./lib/Library";
-import { Component, ANDComponent, componentMap } from "./lib/Component";
-import { Vector } from "./Common";
+import { Component, ANDComponent } from "./lib/Component";
+import { Vector, componentMap } from "./Common";
 
 import { Canvas } from "./ui/Canvas";
 
