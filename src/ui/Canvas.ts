@@ -24,6 +24,8 @@ export class Canvas {
         ctx.strokeStyle = "black";
         let width = libraryWidth, height = this.c.height - toolbarHeight;
         ctx.translate(this.c.width - width, toolbarHeight);
+        ctx.font = "15pt Arial";
+        ctx.fillText("Library", 5, parseInt(ctx.font.toString()) * 1.2);
         ctx.strokeRect(0, 0, width, height);
         ctx.restore();
 
@@ -38,6 +40,8 @@ export class Canvas {
             ctx.arc(0, 0, 40, 0, 2 * Math.PI);
             ctx.stroke();
             ctx.restore();
+            console.log(component.absoluteInputs);
+            console.log(component.absoluteOutputs);
         }
     }
     public mousedown(evt: MouseEvent) {

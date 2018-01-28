@@ -2,7 +2,7 @@ import { componentMap, GUID, Point } from "../Common";
 
 interface IO {
 	guid: GUID,
-	number: number
+	index: number
 }
 
 interface Link {
@@ -11,11 +11,12 @@ interface Link {
 }
 
 export class Component {
-	private components: Set<GUID> = new Set<GUID>();
+	private components = new Set<GUID>();
+	private links = new Set<Link>();
+
 	public location: Point;
-	private links: Set<Link>;
-	private absoluteInputs: Set<IO>;
-	private absoluteOutputs: Set<IO>;
+	public absoluteInputs = new Set<IO>();
+	public absoluteOutputs = new Set<IO>();
 
 	public evaluate: ((inputs: boolean[]) => boolean[]);
 
@@ -75,6 +76,12 @@ export class Component {
 }
 
 export class ANDComponent extends Component {
+	public absoluteInputs = new Set<IO>();
+	public absoluteOutputs = new Set<IO>();
+	constructor(location: Point) {
+		super(location);
+		this.absoluteInputs.add(<IO>{ guid: this.guid, index: 0 });
+	}
 	public evaluate = (p: boolean[]): boolean[] => {
 		return [p[0] && p[1]];
 	};
