@@ -1,4 +1,4 @@
-import { componentMap, GUID, Vector } from "../Common";
+import { componentMap, GUID, Point } from "../Common";
 
 interface IO {
 	guid: GUID,
@@ -12,7 +12,7 @@ interface Link {
 
 export class Component {
 	private components: Set<GUID> = new Set<GUID>();
-	private location: Vector<number>;
+	public location: Point;
 	private links: Set<Link>;
 	private absoluteInputs: Set<IO>;
 	private absoluteOutputs: Set<IO>;
@@ -37,9 +37,10 @@ export class Component {
 		return outer;
 	}
 
-	constructor(location: Vector<number>) {
+	constructor(location: Point) {
 		this.guid = GUID.new();
 		this.location = location;
+		componentMap.set(this.guid, this);
 	}
 
 	compose(): void {

@@ -1,4 +1,4 @@
-import { Point, Newable } from "../Common";
+import { Point, Newable, componentMap, topLevelComponents } from "../Common";
 import { toolbarHeight, toolbarPadding } from "../Constants";
 import { Component, ANDComponent } from "../lib/Component";
 
@@ -13,7 +13,7 @@ export class Toolbar {
     private dragInfo: DragInfo | null = null;
     private phantom: Point | null = null;
     private elements = [
-        { name: "and", ctor: ANDComponent, topleft: new Point(0, 0) }
+        { type: "component", name: "and", ctor: ANDComponent, topleft: new Point(0, 0) }
     ];
     constructor() {
         let x = toolbarPadding, y = toolbarPadding;
@@ -53,9 +53,11 @@ export class Toolbar {
     public mouseup(evt: MouseEvent) {
         // is the mouseup in the stage area?
         if (this.dragInfo != null) {
+            let at = new Point(evt.clientX, evt.clientY);
             let ctor = <Newable<Component>>this.dragInfo.ctor;
-            let c = new ctor();
-            console.log("create a component!", c);
+            let component = new ctor(at);
+            topLevelComponents.add(component.guid);
+
             this.dragInfo = null;
             this.phantom = null;
         }
