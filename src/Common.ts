@@ -25,3 +25,8 @@ export class Vector<T> {
     constructor(public x: T, public y: T) {
     }
 }
+
+//
+
+export let canvas = <HTMLCanvasElement>document.getElementById("canvas");
+export let ctx = canvas.getContext("2d");
