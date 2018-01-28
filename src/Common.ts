@@ -33,6 +33,12 @@ export class GUID extends String {
 
 /// generic pair class
 export class Vector<T> {
-    constructor(public x: T, public y: T) {
-    }
+    constructor(public x: T, public y: T) { }
+}
+
+export class Point extends Vector<number> {
+    // numerical methods
+    public negate() { return new Point(-this.x, -this.y); }
+    public add(other: Point) { return new Point(this.x + other.x, this.y + other.y); }
+    public sub(other: Point) { return this.add(other.negate()); }
 }

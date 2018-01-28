@@ -32,7 +32,6 @@ export class Component {
 	}
 	constructor(private inputs: Link[] = [], private outputs: Component[] = []) {
 		this.guid = GUID.new();
-
 	}
 
 	attach(link: Link): boolean {

@@ -1,22 +1,26 @@
 import { Library } from "./lib/Library";
 import { Component } from "./lib/Component";
 
-import * as Canvas from "./ui/Canvas";
+import { Canvas } from "./ui/Canvas";
+
+export let canvas = new Canvas(<HTMLCanvasElement>document.getElementById("canvas"));
 
 const resizeHandler = function (evt) {
     let target = <Window>evt.target;
-    Canvas.canvas.width = target.innerWidth;
-    Canvas.canvas.height = target.innerHeight;
-    Canvas.Draw();
+    canvas.c.width = target.innerWidth;
+    canvas.c.height = target.innerHeight;
+    canvas.draw();
 }
 
 export function main() {
-    Canvas.canvas.width = window.innerWidth;
-    Canvas.canvas.height = window.innerHeight;
+    canvas.c.width = window.innerWidth;
+    canvas.c.height = window.innerHeight;
 
-    Canvas.canvas.focus();
-    Canvas.canvas.addEventListener("mousemove", Canvas.MouseMove);
-    Canvas.Draw();
+    canvas.c.focus();
+    canvas.c.addEventListener("mousedown", evt => canvas.mousedown(evt));
+    canvas.c.addEventListener("mouseup", evt => canvas.mouseup(evt));
+    canvas.c.addEventListener("mousemove", evt => canvas.mousemove(evt));
+    canvas.draw();
 
     window.addEventListener("resize", resizeHandler);
 }
