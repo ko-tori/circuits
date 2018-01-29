@@ -1,4 +1,5 @@
 import { componentMap, GUID, Point } from "../Common";
+import { componentSize } from "../Constants";
 
 interface IO {
 	guid: GUID,
@@ -74,6 +75,13 @@ export class Component {
 			return true;
 		}
 		return false;
+	}
+
+	public draw(ctx: CanvasRenderingContext2D) {
+		ctx.strokeStyle = "black";
+		ctx.beginPath();
+		ctx.arc(0, 0, componentSize, 0, Math.PI * 2);
+		ctx.stroke();
 	}
 }
 

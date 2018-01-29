@@ -1,5 +1,5 @@
 import { Point, Newable, componentMap, topLevelComponents } from "../Common";
-import { toolbarHeight, toolbarPadding } from "../Constants";
+import { toolbarHeight, toolbarPadding, componentSize } from "../Constants";
 import { Component, ANDComponent } from "../lib/Component";
 
 interface DragInfo {
@@ -33,9 +33,10 @@ export class Toolbar {
         // draw phantom
         if (this.phantom != null) {
             ctx.save();
-            ctx.strokeStyle = "gray";
+            ctx.globalAlpha = 0.6;
+            ctx.strokeStyle = "black";
             ctx.translate(this.phantom.x, this.phantom.y);
-            ctx.strokeRect(-size / 2, -size / 2, size, size);
+            ctx.strokeRect(-componentSize, -componentSize, componentSize * 2, componentSize * 2);
             ctx.restore();
         }
     }

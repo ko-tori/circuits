@@ -1,6 +1,6 @@
 import { topLevelComponents, componentMap } from "../Common";
 import { Toolbar } from "./Toolbar";
-import { toolbarHeight, libraryWidth } from "../Constants";
+import { toolbarHeight, libraryWidth, componentSize } from "../Constants";
 
 export class Canvas {
     private toolbar;
@@ -35,17 +35,13 @@ export class Canvas {
             if (component == undefined) continue;
             ctx.save();
             ctx.translate(component.location.x, component.location.y);
-            ctx.strokeStyle = "black";
-            ctx.beginPath();
-            ctx.arc(0, 0, 40, 0, 2 * Math.PI);
-            ctx.stroke();
+            component.draw(ctx);
             ctx.restore();
-            console.log(component.absoluteInputs);
-            console.log(component.absoluteOutputs);
         }
     }
     public mousedown(evt: MouseEvent) {
         this.toolbar.mousedown(evt);
+        
         this.draw();
     }
     public mouseup(evt: MouseEvent) {
